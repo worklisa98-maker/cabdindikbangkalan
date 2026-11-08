@@ -1,0 +1,16 @@
+# Root-context backend builds must include backend/; the frontend .dockerignore
+# excludes it. Keep the workbook in the build context and secrets/caches out.
+**
+!backend/
+!backend/**
+backend/.env
+backend/.env.*
+backend/.gocache/
+backend/.gocache-build/
+backend/.codex-gocache/
+backend/server
+backend/server.exe
+backend/**/*.exe
+backend/**/*.go.[0-9]*
+backend/**/*.test
+backend/**/*.coverprofile

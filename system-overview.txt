@@ -1,0 +1,33 @@
+Cabdin Bangkalan System Overview
+===============================
+
+1. Architecture & Core Components
+- Next.js (App Router) frontend lives in /app and /components; it renders the dashboard UI, enforces idle logout, and proxies data requests through Next.js API routes using BACKEND_URL. Client-only config is limited to NEXT_PUBLIC_APP_NAME.
+- Go Gin backend in /backend exposes REST APIs for auth, sekolah, prestasi, siswa perguruan tinggi (legacy), and the new siswa pipeline (cohorts, applications, acceptance offers, UKK, final outcomes, plans). Migrations live in /backend/migrations.
+- PostgreSQL runs via docker-compose; backend requires DATABASE_URL, JWT_SECRET, and MASTER_ENCRYPTION_KEY (used for initial password encryption). Optional INIT_ADMIN_MASTER_* env can bootstrap the first ADMIN_MASTER account.
+- Uploads and templates use local storage by default (STORAGE_LOCAL_DIR=./uploads) with placeholders for R2/Supabase. Siswa import rejections are stored in siswa_import_reports for later download.
+
+2. Backend Workflow & Security
+- Login flow: /auth/login, /auth/logout, /auth/me with JWT expiry 10 minutes; ActivityMiddleware refreshes last_seen and the frontend enforces idle logout with cross-tab sync.
+- Role constraints: SCHOOL_ADMIN only sees its school; ADMIN sees data constrained by allowed_levels (SMA/SMK/SLB); ADMIN_MASTER has full access and manages ADMIN accounts + allowed_levels.
+- Data endpoints include prestasi, admissions (legacy), and siswa pipeline endpoints: cohorts, applications, acceptance offers, UKK, plans, validation, finalize, and analytics. Import endpoints return accepted/rejected counts and rejected report URLs.
+- Uploads: /uploads accepts ACHIEVEMENT or ACCEPTANCE (SCHOOL_ADMIN only, requires password). /api/histori lists import batches and DELETE /api/histori/:id removes a batch (ADMIN_MASTER/SCHOOL_ADMIN) while tracking deleted_at/deleted_by.
+- Templates: /templates/achievement, /templates/acceptance, /templates/siswa-cohorts, /templates/siswa-applications. The campus list is sourced from backend/assets/kampus_indonesia.csv and rombel list from backend/assets/lookup_rombel_siswa_xii_master_v2.csv.
+
+3. Frontend Behavior
+- Idle logout triggers after 10 minutes of inactivity, clearing tokens and redirecting to /login; multiple tabs stay in sync.
+- SCHOOL_ADMIN views school data in read-only mode, edits via settings, and must supply current password for credential changes.
+- ADMIN dashboards list school admins with online indicators (last_seen_at within 10 minutes) and can manage school admin accounts; ADMIN_MASTER manages cabdin ADMIN accounts and levels.
+- Siswa pipeline UI supports cohorts, applications, acceptance/UKK imports, plan management, and download of rejected reports.
+
+4. Environment & Local Development
+- Setup: copy .env.example to .env, set MASTER_ENCRYPTION_KEY, start Postgres (docker compose up -d), run goose migrations, start backend (go run ./cmd/server), and run frontend (npm install + npm run dev). npm run dev:all orchestrates DB + backend + frontend.
+- Default credentials: ADMIN admin-cabdin / 123456, SCHOOL_ADMIN admin-SMAN1bangkalan / sman1bangkalan. Optional INIT_ADMIN_MASTER_* can bootstrap ADMIN_MASTER.
+
+5. Deployment & Ops
+- Backend deploys anywhere Go apps run; required env: DATABASE_URL, JWT_SECRET, MASTER_ENCRYPTION_KEY, PORT, STORAGE_PROVIDER, STORAGE_LOCAL_DIR. Optional INIT_ADMIN_MASTER_* and storage-specific settings.
+- Frontend deploys via Vercel; set BACKEND_URL. Stop infra with docker compose down.
+
+6. Testing & Validation
+- Manual checks ensure SCHOOL_ADMIN scoping (403 on other school_id), idle logout after 10 minutes, and rejected upload reports are accessible.
+- Siswa pipeline validations include cohort-required rules, max 3 application choices, SNBP/SNBT constraints, and UKK UTAMA uniqueness per student per year.

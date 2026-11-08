@@ -1,0 +1,131 @@
+# ------------------------------------------------------------
+# Dependencies / Package managers
+# ------------------------------------------------------------
+node_modules/
+**/node_modules/
+.pnpm-store/
+.npm/
+.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# ------------------------------------------------------------
+# Frontend build outputs / caches (Next.js + tooling)
+# ------------------------------------------------------------
+.next/
+**/.next/
+.next-build/
+.next_old/
+out/
+**/out/
+build/
+**/build/
+dist/
+**/dist/
+.turbo/
+.cache/
+**/.cache/
+.parcel-cache/
+.vite/
+.swc/
+.eslintcache
+coverage/
+*.tsbuildinfo
+next-env.d.ts
+
+# ------------------------------------------------------------
+# Go build outputs
+# ------------------------------------------------------------
+bin/
+**/bin/
+vendor/
+**/vendor/
+.gocache/
+.gocache-build/
+backend/.gocache-build/
+backend/.codex-gocache/
+*.test
+*.coverprofile
+cover.out
+*.prof
+*.exe
+*.dll
+*.so
+*.dylib
+/server
+/server.exe
+/backend/server
+/backend/server.exe
+
+# ------------------------------------------------------------
+# Logs / temp artifacts
+# ------------------------------------------------------------
+logs/
+**/logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+tmp/
+**/tmp/
+*.tmp
+*.bak
+*.go.[0-9]*
+*.ts.[0-9]*
+*.tsx.[0-9]*
+
+# ------------------------------------------------------------
+# Environment / secrets
+# ------------------------------------------------------------
+.env
+.env.*
+!.env.example
+!.env.*.example
+*.pem
+*.key
+*.crt
+secrets/
+**/secrets/
+
+# ------------------------------------------------------------
+# Docker local bind data / volumes
+# ------------------------------------------------------------
+/docker-data/
+/docker/volumes/
+/volumes/
+/postgres-data/
+/pgdata/
+/docker/postgres-data/
+
+# ------------------------------------------------------------
+# Local uploads/storage data (keep source route code)
+# ------------------------------------------------------------
+/uploads/
+/storage/
+/public/uploads/
+/backend/uploads/
+/data/uploads/
+
+# Keep Next.js route source code if used
+!app/uploads/
+!app/uploads/**
+!app/api/uploads/
+!app/api/uploads/**
+!components/app/uploads/
+!components/app/uploads/**
+!components/app/api/uploads/
+!components/app/api/uploads/**
+
+# ------------------------------------------------------------
+# IDE / OS / deployment local metadata
+# ------------------------------------------------------------
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+.vercel/

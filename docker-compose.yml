@@ -1,0 +1,15 @@
+version: "3.9"
+services:
+  db:
+    image: postgres:15
+    container_name: cabdin_bangkalan_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: cabdin_bangkalan
+    ports:
+      - "5432:5432"
+    volumes:
+      - cabdin_bangkalan_db:/var/lib/postgresql/data
+volumes:
+  cabdin_bangkalan_db:

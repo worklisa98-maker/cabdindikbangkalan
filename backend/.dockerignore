@@ -1,0 +1,8 @@
+.gocache/
+.gocache-build/
+.codex-gocache/
+server
+server.exe
+*.go.[0-9]*
+*.test
+*.coverprofile
